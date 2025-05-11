@@ -10,7 +10,7 @@ export async function getJwtSecretKey() {
 }
 
 export async function verifyAuth() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   
   if (!token) {
