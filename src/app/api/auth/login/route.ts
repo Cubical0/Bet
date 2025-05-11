@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { User } from '@/models/User';
 import connectDB from '@/lib/db';
+import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -22,19 +23,18 @@ export async function POST(req: Request) {
       );
     }
 
-    // First find the user just by username to debug
+    // Find the user by username
     const user = await User.findOne({ username });
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'Invalid credentials' },
         { status: 401 }
       );
     }
 
-    // Now check password
+    // Check password
     if (user.password !== password) {
-
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -47,6 +47,17 @@ export async function POST(req: Request) {
       { expiresIn: '24h' }
     );
 
+    // Set the token as a cookie
+    cookies().set({
+      name: 'token',
+      value: token,
+      httpOnly: true,
+      path: '/',
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
     return NextResponse.json({ token });
     
   } catch (error) {
@@ -56,4 +67,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-} 
+}

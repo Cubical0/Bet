@@ -1,12 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '@/app/context/AuthContext';
+import ProtectedRoute from '@/app/components/ProtectedRoute';
+import { 
+  CheckCircleIcon, 
+  ExclamationCircleIcon, 
+  ArrowRightOnRectangleIcon,
+  ChartBarIcon,
+  CogIcon,
+  UserGroupIcon,
+  HomeIcon
+} from '@heroicons/react/24/outline';
 
 export default function AdminDashboardPage() {
   const [value, setValue] = useState<number | ''>('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const { user, logout } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = Number(e.target.value);
@@ -30,53 +41,150 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const navItems = [
+    { name: 'Dashboard', icon: HomeIcon, current: true },
+    { name: 'Analytics', icon: ChartBarIcon, current: false },
+    { name: 'Users', icon: UserGroupIcon, current: false },
+    { name: 'Settings', icon: CogIcon, current: false },
+  ];
+
   return (
-    <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-4">
-      <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-center text-2xl font-semibold text-white mb-6 tracking-tight">Admin Input Panel</h1>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-900">
+        {/* Sidebar */}
+        <div className="fixed inset-y-0 left-0 w-64 bg-gray-800 shadow-lg z-10">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-center h-16 px-4 bg-gray-900">
+              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+            </div>
+            
+            <div className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href="#"
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                    item.current
+                      ? 'bg-gray-700 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
+                  {item.name}
+                </a>
+              ))}
+            </div>
+            
+            <div className="p-4 border-t border-gray-700">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                    <span className="text-white font-medium">{user?.username.charAt(0).toUpperCase()}</span>
+                  </div>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-white">{user?.username}</p>
+                  <p className="text-xs font-medium text-gray-400">Administrator</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="ml-auto p-1 rounded-full text-gray-400 hover:text-white hover:bg-gray-700"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="score" className="block text-sm text-neutral-300 mb-2">
-            Number (0–100)
-          </label>
-          <input
-            id="score"
-            type="number"
-            value={value}
-            onChange={handleChange}
-            min={0}
-            max={100}
-            placeholder="Enter a number"
-            className={`w-full px-4 py-2 bg-white/5 text-white border rounded-lg placeholder-neutral-400 focus:outline-none focus:ring-2 transition ${
-              error
-                ? 'border-red-400 focus:ring-red-400'
-                : 'border-white/20 focus:ring-blue-400'
-            }`}
-          />
+        {/* Main content */}
+        <div className="pl-64">
+          <header className="bg-gray-800 shadow">
+            <div className="px-6 py-4">
+              <h2 className="text-xl font-semibold text-white">Dashboard</h2>
+            </div>
+          </header>
+          
+          <main className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {/* Stats cards */}
+              {[
+                { title: 'Total Users', value: '1,234', color: 'bg-blue-500' },
+                { title: 'Active Sessions', value: '56', color: 'bg-green-500' },
+                { title: 'Revenue', value: '$12,345', color: 'bg-purple-500' },
+              ].map((stat, index) => (
+                <div key={index} className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                  <div className={`h-2 ${stat.color}`}></div>
+                  <div className="p-5">
+                    <h3 className="text-gray-400 text-sm font-medium">{stat.title}</h3>
+                    <p className="text-white text-2xl font-semibold mt-1">{stat.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          {error && (
-            <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-              <ExclamationCircleIcon className="w-4 h-4" />
-              {error}
-            </p>
-          )}
+            {/* Input form */}
+            <div className="bg-gray-800 rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-semibold text-white mb-4">Update Settings</h3>
+              
+              <form onSubmit={handleSubmit} className="max-w-md">
+                <div className="mb-4">
+                  <label htmlFor="score" className="block text-sm text-gray-300 mb-2">
+                    Number (0–100)
+                  </label>
+                  <input
+                    id="score"
+                    type="number"
+                    value={value}
+                    onChange={handleChange}
+                    min={0}
+                    max={100}
+                    placeholder="Enter a number"
+                    className={`w-full px-4 py-2 bg-gray-700 text-white border rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                      error
+                        ? 'border-red-400 focus:ring-red-400'
+                        : 'border-gray-600 focus:ring-indigo-500'
+                    }`}
+                  />
 
-          {success && (
-            <p className="mt-3 text-sm text-green-400 flex items-center gap-1">
-              <CheckCircleIcon className="w-4 h-4" />
-              Submitted successfully!
-            </p>
-          )}
+                  {error && (
+                    <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
+                      <ExclamationCircleIcon className="w-4 h-4" />
+                      {error}
+                    </p>
+                  )}
 
-          <button
-            type="submit"
-            disabled={value === '' || !!error}
-            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition disabled:opacity-50"
-          >
-            Submit
-          </button>
-        </form>
+                  {success && (
+                    <p className="mt-3 text-sm text-green-400 flex items-center gap-1">
+                      <CheckCircleIcon className="w-4 h-4" />
+                      Submitted successfully!
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={value === '' || !!error}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition disabled:opacity-50"
+                >
+                  Save Changes
+                </button>
+              </form>
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
