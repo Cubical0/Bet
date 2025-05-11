@@ -17,6 +17,7 @@ export default function AdminDashboardPage() {
   const [value, setValue] = useState<number | ''>('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
   const { user, logout } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,11 +34,31 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (value !== '' && !error) {
-      setSuccess(true);
-      // You can integrate backend logic here
+      setLoading(true);  // Set loading to true before starting API call
+      try {
+        const response = await fetch('/api/satta/today', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ number: value }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          setSuccess(true);
+        } else {
+          setError(result.message || 'An error occurred');
+        }
+      } catch (error) {
+        console.error('API error:', error);
+        setError('An error occurred while updating the value');
+      } finally {
+        setLoading(false);  // Set loading to false after the API call is complete
+      }
     }
   };
 
@@ -175,10 +196,10 @@ export default function AdminDashboardPage() {
 
                 <button
                   type="submit"
-                  disabled={value === '' || !!error}
+                  disabled={value === '' || !!error || loading}
                   className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition disabled:opacity-50"
                 >
-                  Save Changes
+                  {loading ? 'Saving...' : 'Save Changes'}
                 </button>
               </form>
             </div>

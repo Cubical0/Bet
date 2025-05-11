@@ -14,17 +14,43 @@ const AjmeriSattaTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/satta-data");
-        const data = await response.json();
-        setSattaData(data);
+        const response = await fetch("/api/satta/today");
+        const result = await response.json();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const todayEntry = result.dailyValuedata.find((entry: any) => {
+          const date = new Date(entry.date);
+          date.setHours(0, 0, 0, 0);
+          return date.getTime() === today.getTime();
+        });
+
+        const yesterdayEntry = result.dailyValuedata.find((entry: any) => {
+          const date = new Date(entry.date);
+          date.setHours(0, 0, 0, 0);
+          return date.getTime() === yesterday.getTime();
+        });
+
+        setSattaData([
+          {
+            name: "SHIV SHAKTI",
+            time: "12:10",
+            leftNumber: yesterdayEntry?.value ?? "wait",
+            rightNumber: todayEntry?.value ?? "wait",
+          },
+        ]);
       } catch (error) {
         console.error("Error fetching data:", error);
         setSattaData([
           {
             name: "SHIV SHAKTI",
-            time: "01:15",
-            leftNumber: 49,
-            rightNumber: 16,
+            time: "12:10",
+            leftNumber: "wait",
+            rightNumber: "wait",
           },
         ]);
       }
@@ -36,8 +62,8 @@ const AjmeriSattaTable = () => {
   }, []);
 
   return (
-    <div className="flex  bg-black">
-      <div className="w-full  p-1 border-2 border-white">
+    <div className="flex bg-black">
+      <div className="w-full p-1 border-2 border-white">
         <div className="bg-gradient-to-r from-blue-900 via-green-500 to-blue-900 py-6 px-4 rounded">
           {sattaData.map((item, index) => (
             <div key={index} className="text-center">

@@ -6,10 +6,10 @@ import connectDB from '@/lib/db';
 export async function PUT(request: Request) {
   await connectDB();
 
-  const authResult = await verifyAuth();
-  if (!authResult) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+  // const authResult = await verifyAuth();
+  // if (!authResult) {
+  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
   const body = await request.json();
   const { number } = body;
@@ -36,15 +36,10 @@ export async function PUT(request: Request) {
   return NextResponse.json({ message: 'Successfully updated daily value', dailyValue });
 }
 
-
 export async function GET(request: Request) {
   await connectDB();
 
-  const authResult = await verifyAuth();
-  if (!authResult) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-   const today = new Date();
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const tomorrow = new Date(today);
@@ -62,6 +57,5 @@ export async function GET(request: Request) {
     ]
   });
 
-
-  return NextResponse.json({ message: 'Successfully  fetched daily value today and yesterday', dailyValuedata });
+  return NextResponse.json({ message: 'Successfully fetched daily value for today and yesterday', dailyValuedata });
 }
