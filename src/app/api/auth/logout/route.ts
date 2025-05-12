@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 
 export async function POST() {
   // Clear the token cookie
-  cookies().set({
+  const cookieStore = await cookies();
+  cookieStore.set({
     name: 'token',
     value: '',
     httpOnly: true,

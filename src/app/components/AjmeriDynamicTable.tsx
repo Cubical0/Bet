@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const months = [
   'January', 'February', 'March', 'April', 'May',
@@ -7,12 +7,12 @@ const months = [
 ];
 
 const AjmeriDynamicTable = () => {
-  const currentMonthIndex = new Date().getMonth(); // Get the current month index
-  const [selectedMonth, setSelectedMonth] = useState(months[currentMonthIndex]); // Set default as current month
+  const currentMonthIndex = new Date().getMonth();
+  const [selectedMonth, setSelectedMonth] = useState(months[currentMonthIndex]);
   const [selectedYear, setSelectedYear] = useState('2025');
-  const [filteredData, setFilteredData] = useState<{ date: string, value: number }[]>([]);
+  const [filteredData, setFilteredData] = useState<{ date: string; value: number }[]>([]);
 
-  const handleGoClick = async () => {
+  const handleGoClick = useCallback(async () => {
     if (!selectedMonth || !selectedYear) return;
 
     const monthIndex = months.indexOf(selectedMonth) + 1;
@@ -22,7 +22,7 @@ const AjmeriDynamicTable = () => {
       const res = await fetch('/api/satta', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ month: paddedMonth, year: selectedYear })
+        body: JSON.stringify({ month: paddedMonth, year: selectedYear }),
       });
 
       const result = await res.json();
@@ -31,12 +31,11 @@ const AjmeriDynamicTable = () => {
       console.error('Fetch failed:', error);
       setFilteredData([]);
     }
-  };
+  }, [selectedMonth, selectedYear]); // Include dependencies
 
   useEffect(() => {
-    // Automatically fetch data when the component mounts with the default current month and year
     handleGoClick();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, [handleGoClick]);
 
   return (
     <div className="bg-black min-h-screen text-white">
@@ -48,7 +47,9 @@ const AjmeriDynamicTable = () => {
         >
           <option value="">Select Month</option>
           {months.map((month) => (
-            <option key={month} value={month}>{month}</option>
+            <option key={month} value={month}>
+              {month}
+            </option>
           ))}
         </select>
 

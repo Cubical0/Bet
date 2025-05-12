@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth';
 import { DailyValue } from '@/models/DailyValue';
 import connectDB from '@/lib/db';
 
@@ -36,7 +35,7 @@ export async function PUT(request: Request) {
   return NextResponse.json({ message: 'Successfully updated daily value', dailyValue });
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   await connectDB();
 
   const today = new Date();

@@ -15,7 +15,12 @@ const SattaDisplay = () => {
         today.setHours(0, 0, 0, 0);
 
         // Find the entry with today's date
-        const todayEntry = data.dailyValuedata.find((entry: any) => {
+        interface DailyValueEntry {
+          date: string;
+          value: string | number;
+        }
+
+        const todayEntry = data.dailyValuedata.find((entry: DailyValueEntry) => {
           const entryDate = new Date(entry.date);
           entryDate.setHours(0, 0, 0, 0);
           return entryDate.getTime() === today.getTime();

@@ -23,13 +23,18 @@ const AjmeriSattaTable = () => {
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
 
-        const todayEntry = result.dailyValuedata.find((entry: any) => {
+        interface DailyValueData {
+          date: string;
+          value: number | string;
+        }
+
+        const todayEntry = result.dailyValuedata.find((entry: DailyValueData) => {
           const date = new Date(entry.date);
           date.setHours(0, 0, 0, 0);
           return date.getTime() === today.getTime();
         });
 
-        const yesterdayEntry = result.dailyValuedata.find((entry: any) => {
+        const yesterdayEntry = result.dailyValuedata.find((entry: DailyValueData) => {
           const date = new Date(entry.date);
           date.setHours(0, 0, 0, 0);
           return date.getTime() === yesterday.getTime();
