@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node --project scripts/tsconfig.json scripts/seedDailyData.ts"
+    "seed": "ts-node --project scripts/tsconfig.json scripts/seedDailyData.ts",
+    "generate-seo-images": "node scripts/generate-seo-images.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -31,6 +32,7 @@
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4.1.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "sharp": "^0.33.2"
   }
 }

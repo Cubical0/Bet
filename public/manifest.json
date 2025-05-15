@@ -1,0 +1,26 @@
+{
+  "name": "Ajmeri Satta King",
+  "short_name": "Ajmeri Satta",
+  "description": "Live Ajmeri Satta King Results, Charts, and Historical Data",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "scope": "/",
+  "prefer_related_applications": false
+} 
