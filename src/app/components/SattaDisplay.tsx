@@ -41,7 +41,7 @@ const SattaDisplay = () => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-black "> 
-      <h1 className="text-red-600 text-4xl font-bold mb-4">AJMERI GATE SATTA</h1>
+      <h1 className="text-red-600 text-4xl font-bold mb-4">AJMERI SATTA KING</h1>
       <div className="text-green-500 text-3xl font-bold animate-pulse">
         {number}
       </div>

@@ -84,7 +84,11 @@ const AjmeriDynamicTable = () => {
                   <td className="border border-white p-2">
                     {new Date(entry.date).toLocaleDateString()}
                   </td>
-                  <td className="border border-white p-2">{entry.value}</td>
+                  <td className="border border-white p-2">
+                  <h1 className="text-xl font-semibold text-red-600">
+  {entry.value}
+</h1>
+                  </td>
                 </tr>
               ))
             ) : (

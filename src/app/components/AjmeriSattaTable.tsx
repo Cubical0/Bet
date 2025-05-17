@@ -42,7 +42,7 @@ const AjmeriSattaTable = () => {
 
         setSattaData([
           {
-            name: "SHIV SHAKTI",
+            name: "AJMERI SATTA KING",
             time: "12:10",
             leftNumber: yesterdayEntry?.value ?? "wait",
             rightNumber: todayEntry?.value ?? "wait",
@@ -52,7 +52,7 @@ const AjmeriSattaTable = () => {
         console.error("Error fetching data:", error);
         setSattaData([
           {
-            name: "SHIV SHAKTI",
+            name: "AJMERI SATTA KING",
             time: "12:10",
             leftNumber: "wait",
             rightNumber: "wait",

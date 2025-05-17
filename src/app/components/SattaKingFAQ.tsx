@@ -22,24 +22,12 @@ const faqData = [
     answer: `The very simple answer is people want to get rich quickly without hard work...`,
   },
   {
-    question: 'What happens when people play Satta King?',
-    answer: `Most people think they will win, but only 1 out of 100 usually does...`,
-  },
-  {
     question: 'The Reality of Satta King Game?',
     answer: `Satta King is supposedly a lottery game, but in reality, the winner is manipulated based on profit for organizers...`,
   },
   {
-    question: 'Is Satta King Legal in India?',
-    answer: `No, Satta and similar betting games are illegal in India under various laws...`,
-  },
-  {
     question: 'Satta King Leak Number',
     answer: `Some claim to provide "leaked numbers" for Gali and Disawar games, but these are misleading and exploit losses...`,
-  },
-  {
-    question: 'चेतावनी (WARNING)',
-    answer: `यह साइट सिर्फ और सिर्फ मनोरंजन के लिए बनाई गई है...`,
   },
   {
     question: 'SATTA KING DISCLAIMER',
