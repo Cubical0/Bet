@@ -43,7 +43,7 @@ const AjmeriSattaTable = () => {
         setSattaData([
           {
             name: "AJMERI SATTA KING",
-            time: "12:10",
+            time: "23:10",
             leftNumber: yesterdayEntry?.value ?? "wait",
             rightNumber: todayEntry?.value ?? "wait",
           },
@@ -53,7 +53,7 @@ const AjmeriSattaTable = () => {
         setSattaData([
           {
             name: "AJMERI SATTA KING",
-            time: "12:10",
+            time: "23:10",
             leftNumber: "wait",
             rightNumber: "wait",
           },
