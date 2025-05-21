@@ -17,12 +17,12 @@ export async function POST(request: Request) {
       $gte: startDate,
       $lt: endDate
     }
-  });
+  }).lean();
 
-  // Convert date/value to simplified array format
+  // Convert date/value to simplified array format and ensure values are padded strings
   const data = dailyValues.map(entry => ({
     date: entry.date,
-    value: entry.value
+    value: String(entry.value).padStart(2, '0')
   }));
 
   return NextResponse.json({ message: 'Success', data });

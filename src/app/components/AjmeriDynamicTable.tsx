@@ -1,37 +1,49 @@
-'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
 
 const months = [
-  'January', 'February', 'March', 'April', 'May',
-  'June', 'July', 'August', 'September', 'October', 'November', 'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const AjmeriDynamicTable = () => {
   const currentMonthIndex = new Date().getMonth();
   const [selectedMonth, setSelectedMonth] = useState(months[currentMonthIndex]);
-  const [selectedYear, setSelectedYear] = useState('2025');
-  const [filteredData, setFilteredData] = useState<{ date: string; value: number }[]>([]);
+  const [selectedYear, setSelectedYear] = useState("2025");
+  const [filteredData, setFilteredData] = useState<
+    { date: string; value: string }[]
+  >([]);
 
   const handleGoClick = useCallback(async () => {
     if (!selectedMonth || !selectedYear) return;
 
     const monthIndex = months.indexOf(selectedMonth) + 1;
-    const paddedMonth = monthIndex.toString().padStart(2, '0');
+    const paddedMonth = monthIndex.toString().padStart(2, "0");
 
     try {
-      const res = await fetch('/api/satta', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/satta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ month: paddedMonth, year: selectedYear }),
       });
 
       const result = await res.json();
       setFilteredData(result.data || []);
     } catch (error) {
-      console.error('Fetch failed:', error);
+      console.error("Fetch failed:", error);
       setFilteredData([]);
     }
-  }, [selectedMonth, selectedYear]); // Include dependencies
+  }, [selectedMonth, selectedYear]);
 
   useEffect(() => {
     handleGoClick();
@@ -85,15 +97,17 @@ const AjmeriDynamicTable = () => {
                     {new Date(entry.date).toLocaleDateString()}
                   </td>
                   <td className="border border-white p-2">
-                  <h1 className="text-xl font-semibold text-red-600">
-  {entry.value}
-</h1>
+                    <h1 className="text-xl font-semibold text-red-600">
+                      {String(entry.value).padStart(2, "0")}
+                    </h1>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={2} className="p-4 text-gray-300">No data available</td>
+                <td colSpan={2} className="p-4 text-gray-300">
+                  No data available
+                </td>
               </tr>
             )}
           </tbody>
